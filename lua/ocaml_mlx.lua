@@ -19,10 +19,12 @@ local lspconfig = require('lspconfig')
 local ocamllsp_config = lspconfig.ocamllsp.document_config.default_config
 table.insert(ocamllsp_config.filetypes, 'ocaml_mlx')
 
+local get_language_id = ocamllsp_config.get_language_id
+
 function ocamllsp_config.get_language_id(bufnr, ftype)
   if ftype == 'ocaml_mlx' then 
     return 'ocaml' 
   else 
-    return ocamllsp_config.get_language_id(bufnr, ftype)
+    return get_language_id(bufnr, ftype)
   end
 end
