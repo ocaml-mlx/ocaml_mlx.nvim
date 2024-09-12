@@ -10,7 +10,7 @@ local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
 
 parser_config.ocaml_mlx = {
   install_info = {
-    url = "~/Workspace/tree-sitter-mlx",
+    url = "https://github.com/ocaml-mlx/tree-sitter-mlx",
     files = {'src/scanner.c', 'src/parser.c'},
     location = 'grammars/mlx',
     branch = 'master',
