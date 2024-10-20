@@ -7,7 +7,7 @@
 ] @indent.begin
 
 (jsx_element_opening
-  name: (_) @indent.begin)
+  (jsx_tag) @indent.begin)
 
 (jsx_element_closing
   ">" @indent.end)
