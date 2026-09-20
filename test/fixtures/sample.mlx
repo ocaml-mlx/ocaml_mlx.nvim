@@ -1,0 +1,21 @@
+let greeting name = <div className="greeting">"Hello, " name</div>
+
+let icon = <Icon.Star />
+
+let nav ~items () =
+  <nav id="main" data_count=1 hidden ?disabled ?count=items>
+    <Nav.Link href="/" active>"Home"</Nav.Link>
+    <Nav.Link href="/about">"About"</Nav.Link>
+  </nav>
+
+let list_spread items = <ul>...items</ul>
+
+let list_spread_spaced items = <ul> ...items </ul>
+
+let page ~title ~children () =
+  <html>
+    <head><title>title</title></head>
+    <body class_="content">
+      <Content>...children</Content>
+    </body>
+  </html>
