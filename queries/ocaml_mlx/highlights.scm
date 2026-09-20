@@ -34,3 +34,5 @@
       "/>"
     ] @tag.delimiter))
 
+; `...children` / `...(expr)` spread inside an element's children.
+(jsx_children_spread "..." @punctuation.special)

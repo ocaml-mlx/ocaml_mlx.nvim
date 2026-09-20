@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-fast:
+    strategy:
+      fail-fast: false
+      matrix:
+        neovim-version: [stable, nightly]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim-version }}
+
+      - name: Run fast test suite
+        run: make test-fast
+
+  test-integration:
+    strategy:
+      fail-fast: false
+      matrix:
+        neovim-version: [stable, nightly]
+        nvim-treesitter-branch: [main]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim-version }}
+
+      # nvim-treesitter `main` shells out to the tree-sitter CLI to build parsers.
+      - uses: tree-sitter/setup-action@v2
+        with:
+          install-lib: false
+
+      - name: Resolve nvim-treesitter HEAD SHA
+        id: nvt-sha
+        run: |
+          sha=$(git ls-remote https://github.com/nvim-treesitter/nvim-treesitter.git ${{ matrix.nvim-treesitter-branch }} | cut -f1)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Cache nvim-treesitter clone
+        uses: actions/cache@v4
+        with:
+          path: test/.build/nvim-treesitter-${{ matrix.nvim-treesitter-branch }}
+          key: nvim-treesitter-clone-${{ matrix.nvim-treesitter-branch }}-${{ steps.nvt-sha.outputs.sha }}
+
+      - name: Fetch nvim-treesitter (${{ matrix.nvim-treesitter-branch }})
+        run: make fetch-nvim-treesitter TS_BRANCH=${{ matrix.nvim-treesitter-branch }}
+
+      - name: Run integration test suite
+        run: make test-integration TS_BRANCH=${{ matrix.nvim-treesitter-branch }}
